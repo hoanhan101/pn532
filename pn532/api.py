@@ -14,6 +14,9 @@ class PN532(object):
         # smbus object
         self.bus = smbus.SMBus(1)
 
+    def get_address(self):
+        return self.address
+
     def write_byte(self, reg, data):
         self.bus.write_byte_data(self.address, reg, data)
 
@@ -21,6 +24,9 @@ class PN532(object):
         read = self.bus.read_byte_data(self.address, reg)
 
         return read
+
+    def write_block(self, reg, data):
+        self.bus.write_i2c_block_data(self.address, reg, data)
 
     def read_block(self, reg):
         read = self.bus.read_i2c_block_data(self.address, reg)
