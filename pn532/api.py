@@ -13,3 +13,16 @@ class PN532(object):
 
         # smbus object
         self.bus = smbus.SMBus(1)
+
+    def write_byte(self, reg, data):
+        self.bus.write_byte_data(self.address, reg, data)
+
+    def read_byte(self, reg):
+        read = self.bus.read_byte_data(self.address, reg)
+
+        return read
+
+    def read_block(self, reg):
+        read = self.bus.read_i2c_block_data(self.address, reg)
+
+        return read
