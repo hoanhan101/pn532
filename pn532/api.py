@@ -60,33 +60,41 @@ class PN532(object):
         self.write_byte(self.address, data)
 
     def write_byte(self, reg, data):
-        try:
-            self.bus.write_byte_data(self.address, reg, int(data))
-        except OSError:
-            print("retry in 1s")
-            time.sleep(1)
+        while True:
+            try:
+                self.bus.write_byte_data(self.address, reg, int(data))
+            except OSError:
+                print("write_byte - retry in 1s")
+                time.sleep(1)
+            else:
+                break
 
     def read_byte(self, reg):
-        try:
-            read = self.bus.read_byte_data(self.address, reg)
-        except OSError:
-            print("retry in 1s")
-            time.sleep(1)
-
-        return read
+        while True:
+            try:
+                read = self.bus.read_byte_data(self.address, reg)
+            except OSError:
+                print("read_byte - retry in 1s")
+                time.sleep(1)
+            else:
+                return read
 
     def write_block(self, reg, data):
-        try:
-            self.bus.write_i2c_block_data(self.address, reg, data)
-        except OSError:
-            print("retry in 1s")
-            time.sleep(1)
+        while True:
+            try:
+                self.bus.write_i2c_block_data(self.address, reg, data)
+            except OSError:
+                print("write_block - retry in 1s")
+                time.sleep(1)
+            else:
+                break
 
     def read_block(self, reg):
-        try:
-            read = self.bus.read_i2c_block_data(self.address, reg)
-        except OSError:
-            print("retry in 1s")
-            time.sleep(1)
-
-        return read
+        while True:
+            try:
+                read = self.bus.read_i2c_block_data(self.address, reg)
+            except OSError:
+                print("read_block retry in 1s")
+                time.sleep(1)
+            else:
+                return read
