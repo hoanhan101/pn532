@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-import time
-
 from pn532.api import PN532
 
 
