@@ -46,5 +46,5 @@ make test
 ```
 
 ## Reference
-- [PN532's arduino library in C++](https://github.com/adafruit/Adafruit-PN532)
-- [Project structure](https://docs.python-guide.org/writing/structure/)
+- [PN532 data sheet](https://www.nxp.com/docs/en/nxp/data-sheets/PN532_C1.pdf)
+- [PN532 user manual](ihttps://www.nxp.com/docs/en/user-guide/141520.pdf)
