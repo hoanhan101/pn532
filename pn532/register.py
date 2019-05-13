@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # register.py contains a set of registers addresses mapping
 #
