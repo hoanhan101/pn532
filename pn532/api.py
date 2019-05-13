@@ -2,7 +2,7 @@
 # api.py contains a set of core functions
 #
 
-import smbus
+from .smbus2.smbus2 import SMBus, i2c_msg
 import time
 
 from pn532.register import *
@@ -13,88 +13,19 @@ class PN532(object):
         self.address = PN532_DEFAULT_ADDRESS
 
         # smbus object
-        self.bus = smbus.SMBus(1)
+        self.bus = SMBus(1)
 
-    def get_address(self):
-        return self.address
-    
-    def sam_config(self):
-        """configure board to read RFID tags"""
+    def write(self, data):
+        """write to its own address with given block data"""
+        self.bus.write_i2c_block_data(self.address, self.address, data)
+
+    def read(self, length):
+        """read from its own address a given-length of block data"""
         buf = []
-        buf.append(PN532_COMMAND_SAMCONFIGURATION)
-        buf.append(0x01) # normal mode
-        buf.append(0x14) # timeout 1s
-        buf.append(0x01) # use IRQ pin
+        msg = i2c_msg.read(self.address, length)
+        self.bus.i2c_rdwr(msg)
 
-        self.write_cmd(buf, 4)
+        for b in msg:
+            buf.append(b)
 
-    def write_cmd(self, cmd, cmdlen):
-        """write a command to the device, automatically inserting preamble and
-        reqired frame details"""
-        checksum = 0
-
-        cmdlen += 1
-
-        time.sleep(2)
-
-        checksum = PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2
-        self.send_byte(PN532_PREAMBLE)
-        self.send_byte(PN532_PREAMBLE)
-        self.send_byte(PN532_PREAMBLE)
-
-        self.send_byte(cmdlen)
-        self.send_byte(~cmdlen + 1)
-
-        self.send_byte(PN532_HOSTTOPN532)
-        checksum += PN532_HOSTTOPN532
-
-        for i in range(0, cmdlen-1):
-            self.send_byte(cmd[i])
-            checksum += cmd[i]
-
-        self.send_byte(~checksum)
-        self.send_byte(PN532_POSTAMBLE)
-
-    def send_byte(self, data):
-        """send a byte to my default i2c address"""
-        self.write_byte(self.address, data)
-
-    def write_byte(self, reg, data):
-        while True:
-            try:
-                self.bus.write_byte_data(self.address, reg, int(data))
-            except OSError:
-                print("write_byte - retry in 1s")
-                time.sleep(1)
-            else:
-                break
-
-    def read_byte(self, reg):
-        while True:
-            try:
-                read = self.bus.read_byte_data(self.address, reg)
-            except OSError:
-                print("read_byte - retry in 1s")
-                time.sleep(1)
-            else:
-                return read
-
-    def write_block(self, reg, data):
-        while True:
-            try:
-                self.bus.write_i2c_block_data(self.address, reg, data)
-            except OSError:
-                print("write_block - retry in 1s")
-                time.sleep(1)
-            else:
-                break
-
-    def read_block(self, reg):
-        while True:
-            try:
-                read = self.bus.read_i2c_block_data(self.address, reg)
-            except OSError:
-                print("read_block retry in 1s")
-                time.sleep(1)
-            else:
-                return read
+        return buf
