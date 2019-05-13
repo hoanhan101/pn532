@@ -43,6 +43,18 @@ class PN532(object):
         self.write_addr(card_config)
         self.read_addr(BLOCK_SIZE)
 
+    def construct_frame(self, data):
+        # begin with 6-bytes frame structure
+        buf = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        buf[0] = PN532_PREAMBLE
+        buf[1] = PN532_STARTCODE1
+        buf[2] = PN532_STARTCODE2
+        buf[3] = len(data) + 1          # number of bytes in data and frame identifier field
+        buf[4] = (buf[3] & 0xFF) + 0x01 # packet length checksum
+        buf[5] = PN532_HOSTTOPN532
+
+        return buf
+
     def write_addr(self, data):
         """write to its own address with given block data"""
         time.sleep(REST_INTERVAL)
