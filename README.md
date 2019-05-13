@@ -47,4 +47,4 @@ make test
 
 ## Reference
 - [PN532 data sheet](https://www.nxp.com/docs/en/nxp/data-sheets/PN532_C1.pdf)
-- [PN532 user manual](ihttps://www.nxp.com/docs/en/user-guide/141520.pdf)
+- [PN532 user manual](https://www.nxp.com/docs/en/user-guide/141520.pdf)
