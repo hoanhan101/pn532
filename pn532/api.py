@@ -24,6 +24,12 @@ class PN532(object):
         self.write(sam_config)
         self.read(BLOCK_SIZE)
 
+    def read_card(self):
+        """send read card command"""
+        card_config = [0x00, 0x00, 0xff, 0x04, 0xfc, 0xd4, 0x4a, 0x01, 0x00, 0xe1, 0x00]
+        self.write(card_config)
+        self.read(BLOCK_SIZE)
+
     def write(self, data):
         """write to its own address with given block data"""
         time.sleep(REST_INTERVAL)
