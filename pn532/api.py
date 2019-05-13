@@ -18,26 +18,39 @@ class PN532(object):
         # smbus object
         self.bus = SMBus(1)
 
+    def setup(self):
+        """setup the device"""
+        self.sam_config()
+
+    def read(self):
+        """keep reading until a card is detected, return the reading afterward"""
+        self.in_list_passive_target()
+
+        while True:
+            read = self.read_addr(BLOCK_SIZE)
+            if read[:3] != [0x00, 0x80, 0x80]:
+                return read
+
     def sam_config(self):
-        """send samconfig command"""
+        """send SAMConfiguration command"""
         sam_config = [0x00, 0x00, 0xff, 0x05, 0xfb, 0xd4, 0x14, 0x01, 0x01, 0x00, 0x16, 0x00]
-        self.write(sam_config)
-        self.read(BLOCK_SIZE)
+        self.write_addr(sam_config)
+        self.read_addr(BLOCK_SIZE)
 
-    def read_card(self):
-        """send read card command"""
+    def in_list_passive_target(self):
+        """send InListPassiveTarget command"""
         card_config = [0x00, 0x00, 0xff, 0x04, 0xfc, 0xd4, 0x4a, 0x01, 0x00, 0xe1, 0x00]
-        self.write(card_config)
-        self.read(BLOCK_SIZE)
+        self.write_addr(card_config)
+        self.read_addr(BLOCK_SIZE)
 
-    def write(self, data):
+    def write_addr(self, data):
         """write to its own address with given block data"""
         time.sleep(REST_INTERVAL)
 
         self.bus.write_i2c_block_data(self.address, self.address, data)
-        print("write:", data)
+        print("write_addr:", data)
 
-    def read(self, length):
+    def read_addr(self, length):
         """read from its own address a given-length of block data"""
         time.sleep(REST_INTERVAL)
 
@@ -48,5 +61,5 @@ class PN532(object):
         for b in msg:
             buf.append(b)
 
-        print("read:", buf)
+        print("read_addr:", buf)
         return buf
