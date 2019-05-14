@@ -34,15 +34,15 @@ class PN532(object):
 
     def sam_config(self):
         """send SAMConfiguration command"""
-        self.write_addr(construct_frame(
-            register.PN532_COMMAND_SAMCONFIGURATION, 0x01, 0x01, 0x00)
+        self.write_addr(
+            construct_frame([register.PN532_COMMAND_SAMCONFIGURATION, 0x01, 0x01, 0x00])
         )
         self.read_addr(BLOCK_SIZE)
 
     def in_list_passive_target(self):
         """send InListPassiveTarget command"""
-        self.write_addr(construct_frame(
-            register.PN532_COMMAND_INLISTPASSIVETARGET, 0x01, 0x00)
+        self.write_addr(
+            construct_frame([register.PN532_COMMAND_INLISTPASSIVETARGET, 0x01, 0x00])
         )
         self.read_addr(BLOCK_SIZE)
 
