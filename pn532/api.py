@@ -9,7 +9,10 @@ from .smbus2.smbus2 import SMBus, i2c_msg
 import time
 import logging
 
-REST_INTERVAL = 0.5
+# rest time in second betweet each read/write transaction
+REST_INTERVAL = 0.5 
+
+# maximum block size for each read transaction
 BLOCK_SIZE = 20
 
 class PN532(object):
@@ -48,8 +51,12 @@ class PN532(object):
 
         while True:
             read = self.read_addr(BLOCK_SIZE)
+            # check the first 3 bytes to see if a card is detected or not
             if read[:3] != [0x00, 0x80, 0x80]:
-                return read
+                # TODO - the first 9 bytes are configs bytes so we're not really
+                # interested in getting these at the moment, though they could
+                # be used for validation in the future.
+                return read[9:]
 
     def sam_config(self):
         """send SAMConfiguration command"""
