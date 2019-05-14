@@ -13,7 +13,13 @@ git clone https://github.com/hoanhan101/pn532.git
 
 ### API
 
-> TODO
+There are 2 main methods that we care about at the moment, one is `setup()`
+and one is `read()`.
+- `setup()` takes an optional boolean parameter, `enable_logging`, which is to
+  enable debugging messages. This should be always be called first so that the
+  sensor is initialized and setup properly.
+- `read()` returns the card reading value, in an array of 20-bytes format. This
+  will block and only return once a card is detected.
 
 ### Examples
 
