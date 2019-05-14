@@ -7,8 +7,9 @@ if __name__== "__main__":
     nfc = PN532()
 
     # setup the device
-    nfc.setup()
+    nfc.setup(enable_logging=True)
 
     # keep reading until a value is returned
-    read = nfc.read()
-    print(read)
+    while True:
+        read = nfc.read()
+        print(read)
