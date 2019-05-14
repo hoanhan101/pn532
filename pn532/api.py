@@ -7,6 +7,7 @@ from . import register
 from .smbus2.smbus2 import SMBus, i2c_msg
 
 import time
+import logging
 
 REST_INTERVAL = 0.5
 BLOCK_SIZE = 20
@@ -19,9 +20,27 @@ class PN532(object):
         # smbus object
         self.bus = SMBus(1)
 
-    def setup(self):
+        # logger object
+        self.logger = logging.getLogger()
+
+    def setup(self, enable_logging=False):
         """setup the device"""
+        if enable_logging:
+            self.use_logging()
+
         self.sam_config()
+
+    def use_logging(self):
+        """use debug logging"""
+        # setup a custom formatting message
+        handler = logging.StreamHandler()
+        handler.setFormatter(
+            logging.Formatter("%(asctime)s | %(levelname)-5s | %(message)s")
+        )
+        self.logger.addHandler(handler)
+
+        # set logging level to DEBUG
+        self.logger.setLevel(logging.DEBUG)
 
     def read(self):
         """keep reading until a card is detected and its reading is returned"""
@@ -51,7 +70,7 @@ class PN532(object):
         time.sleep(REST_INTERVAL)
 
         self.bus.write_i2c_block_data(self.address, self.address, data)
-        print("write_addr:", data)
+        self.logger.debug("write_addr: %s", data)
 
     def read_addr(self, length):
         """read from its own address a given-length of block data"""
@@ -64,7 +83,7 @@ class PN532(object):
         for b in msg:
             buf.append(b)
 
-        print("read_addr:", buf)
+        self.logger.debug("read_addr: %s", buf)
         return buf
 
 def construct_frame(data):
