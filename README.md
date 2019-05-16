@@ -19,7 +19,8 @@ and one is `read()`.
   enable debugging messages. This should be always be called first so that the
   sensor is initialized and setup properly.
 - `read()` returns the card reading value, in an array of 11-bytes format. This
-  will block and only return once a card is detected.
+  will block and only return once a card is detected. Sample readings can be
+  found [here](data/output.txt).
 
 ### Examples
 
