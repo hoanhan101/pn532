@@ -46,7 +46,12 @@ class PN532(object):
         self.logger.setLevel(logging.DEBUG)
 
     def read(self):
-        """keep reading until a card is detected and its reading is returned"""
+        """return a reading value as an integer"""
+        # read value is the sum of all bytes in the raw reading
+        return sum(self.read_raw())
+
+    def read_raw(self):
+        """return a raw reading value as an array of bytes"""
         self.in_list_passive_target()
 
         while True:
@@ -55,7 +60,7 @@ class PN532(object):
             if read[:3] != [0x00, 0x80, 0x80]:
                 # TODO - the first 9 bytes are configs bytes so we're not really
                 # interested in getting these at the moment, though they could
-                # be used for validation in the future.
+                # be used for validation in the future
                 return read[9:]
 
     def sam_config(self):
