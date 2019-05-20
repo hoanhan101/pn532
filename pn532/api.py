@@ -46,11 +46,6 @@ class PN532(object):
         self.logger.setLevel(logging.DEBUG)
 
     def read(self):
-        """return a reading value as an integer"""
-        # read value is the sum of all bytes in the raw reading
-        return sum(self.read_raw())
-
-    def read_raw(self):
         """return a raw reading value as an array of bytes"""
         self.in_list_passive_target()
 

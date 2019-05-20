@@ -18,10 +18,8 @@ and one is `read()`.
 - `setup()` takes an optional boolean parameter, `enable_logging`, which is to
   enable debugging messages. This should be always be called first so that the
   sensor is initialized and setup properly.
-- `read()` returns the card reading value as an integer. This will block and
-  only return once a card is detected. Sample readings can be found [here](data/output.txt).
-- `read_raw()` returns the card reading value as an array of 11-bytes. This is
-  the same as `read`, except its output is in different format.
+- `read()` returns the card reading value as an array of 11-bytes. This will block and
+  only return once a card is detected. Sample readings can be found [here](output/raw.txt).
 
 ### Examples
 
